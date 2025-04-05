@@ -9,8 +9,9 @@ app = Flask(__name__)
 CORS(app)
 
 # Configurações do e-mail
+# Configurações do e-mail
 EMAIL_HOST = "smtp.gmail.com"
-EMAIL_PORT = 587
+EMAIL_PORT = 465  # Alterado de 587 para 465
 EMAIL_REMETENTE = os.environ.get("EMAIL_REMETENTE")
 SENHA_APP = os.environ.get("SENHA_APP")
 
@@ -35,16 +36,12 @@ def criar_mensagem(email_destino: str, senha: str) -> EmailMessage:
     
     msg.set_content(corpo, subtype="html")
     return msg
-
 def enviar_email(email_destino: str, senha: str) -> bool:
     try:
         msg = criar_mensagem(email_destino, senha)
-        
-        with smtplib.SMTP(EMAIL_HOST, EMAIL_PORT) as server:
-            server.starttls()
+        with smtplib.SMTP_SSL(EMAIL_HOST, EMAIL_PORT) as server:  # Usando SMTP_SSL
             server.login(EMAIL_REMETENTE, SENHA_APP)
             server.send_message(msg)
-            
         return True
     except Exception as e:
         print(f"ERRO: {str(e)}")
