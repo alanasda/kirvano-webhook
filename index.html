@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Simulação de Checkout</title>
+</head>
+<body>
+  <h2>Simular Compra</h2>
+  <input type="email" id="email" placeholder="Seu e-mail">
+  <button onclick="simularCompra()">Finalizar Compra</button>
+  <p id="resposta"></p>
+
+  <script>
+    async function simularCompra() {
+      const email = document.getElementById("email").value;
+      const resposta = document.getElementById("resposta");
+
+      const res = await fetch("http://localhost:5000/checkout", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({ email: email })
+      });
+
+      const dados = await res.json();
+      resposta.textContent = dados.mensagem || dados.erro;
+    }
+  </script>
+</body>
+</html>
